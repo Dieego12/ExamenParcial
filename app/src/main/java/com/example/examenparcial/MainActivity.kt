@@ -3,45 +3,38 @@ package com.example.examenparcial
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.examenparcial.ui.theme.ExamenParcialTheme
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.examenparcial.ui.theme.PantallaBilletera
+import com.example.examenparcial.ui.theme.PantallaComprobante
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
-            ExamenParcialTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+            MaterialTheme {
+                BilleteraApp()
             }
         }
     }
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    ExamenParcialTheme {
-        Greeting("Android")
+fun BilleteraApp() {
+    val navController = rememberNavController()
+    NavHost(navController = navController, startDestination = "billetera") {
+        composable("billetera") {
+            PantallaBilletera(navController)
+        }
+        composable("comprobante/{montoRetirado}") { backStackEntry ->
+            val montoRetirado = backStackEntry.arguments?.getString("montoRetirado") ?: "0"
+            PantallaComprobante(montoRetirado, navController)
+        }
     }
 }
+
+
+
